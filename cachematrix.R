@@ -2,11 +2,20 @@
 ##inverse of a matrix, and then return the inverse back
 ##to the original matrix.
 
-## makeCacheMatrix would create a matrix 
-##that can cache its inverse
+## makeCacheMatrix would create a matrix that can cache its inverse
 
 makeCacheMatrix <- function(x = matrix()) {
-
+        inv <- NULL
+        set <- function(y) {
+                x <<- y
+                m <<- NULL
+        }
+        get <- function() x
+        setInv <- function(inverse) inv <<- inverse
+        getInv <- function() inv
+        list(set = set, get = get,
+             setInv = setInv,
+             getInv = getInv)
 }
 
 
@@ -15,4 +24,13 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
+        inv <- x$getInv()
+        if(!is.null(inv)) {
+                message("getting inversed matrix")
+                return(inv)
+        }
+        temp <- x$get()
+        inv <- solve(temp, ...)
+        x$setInv(inv)
+        inv
 }
